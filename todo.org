@@ -2,3 +2,8 @@
 ** Engine Work:
 *** DONE Finish Basic Reliable Quick Init
 *** DONE Fix Your TimeStep in Quick Init
+* TODO LIST 27/12 :
+** Engine work :
+*** [X] Start abstracting input handling
+*** [ ] proper Window Control API
+*** [ ] Test the Input Handling API

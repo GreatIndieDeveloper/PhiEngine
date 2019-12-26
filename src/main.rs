@@ -24,7 +24,7 @@ fn main() {
         
     }
     engine.world.create_entity().with(components::Transform{position : na::Vector2::<f32>::new(100.0,100.0),scale : na::Vector2::<f32>::new(100.0,100.0),rotation : 0.0}).with(components::Sprite{texid : 0}).build();
-    engine.update(|dt|{println!("OAH MY GOD");},|dt|{});
+    engine.update(|dt|{},|dt|{});
 
     println!("Hello, world!");
 }

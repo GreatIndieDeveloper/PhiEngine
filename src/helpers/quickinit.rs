@@ -5,11 +5,12 @@ use super::super::components;
 use glfw::{Context};
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::collections::HashMap;
 pub struct Engine{
     pub world: specs::World,
     render_commands_system : render_system::RenderCommandsSystem,
-    window_handler : (glfw::Glfw,io::window::Window)
-
+    window_handler : (glfw::Glfw,io::window::Window),
+    pub key_handler : HashMap<i32,fn()>
 }
 impl Engine{
     pub fn new() -> Self{
@@ -23,7 +24,8 @@ impl Engine{
         Engine{
             world : specs::World::new(),        
             render_commands_system,
-            window_handler : (glfwer,window)
+            window_handler : (glfwer,window),
+            key_handler : HashMap::new()
         }
     }
     pub fn init_basic_systems(&mut self){
@@ -41,6 +43,17 @@ impl Engine{
 
         while !self.window_handler.1.glfw_window.should_close(){
             let new_time = std::time::Instant::now();
+            self.window_handler.0.poll_events();
+            for x in &self.key_handler{
+                unsafe{
+                    let isdown = glfw::ffi::glfwGetKey(self.window_handler.1.glfw_window.window_ptr(),*(x.0) as _) == glfw::ffi::PRESS;
+                    if isdown {
+                        // Doesn't this remind you of something ?
+                        (*(x.1))();
+                    }
+                }
+            }
+
             let mut frame_time = new_time.duration_since(current_time).as_nanos() as f32 / 1000000000.0; // from ns to s
             if frame_time > 0.25 { // where did this constant come from?
                 frame_time = 0.25;
@@ -48,14 +61,13 @@ impl Engine{
             current_time = new_time;
 
             accumulator += frame_time as f64;
-
+            //glfw::ffi::glfwGetKey(self.window_handler.1.window, glfw::ffi::)
             while accumulator >= dt {
                 accumulator -= dt;
                 fixed_update(frame_time);
                 t += dt;
             }
 
-            self.window_handler.0.poll_events();
             unsafe{
                 gl::Clear(gl::COLOR_BUFFER_BIT);
                 gl::ClearColor(1.0,0.0,0.0,1.0);

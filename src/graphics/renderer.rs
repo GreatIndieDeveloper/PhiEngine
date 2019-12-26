@@ -59,7 +59,6 @@ impl Renderer {
             gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo_id);
             gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, self.ebo_id);
 
-
             gl::BufferData(
                 gl::ELEMENT_ARRAY_BUFFER,
                 (std::mem::size_of::<i32>() as i32 * (INDICESBUFFERSIZE as i32))
